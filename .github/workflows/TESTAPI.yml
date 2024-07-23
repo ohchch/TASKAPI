@@ -71,5 +71,8 @@ jobs:
       with:
         status: ${{ job.status }}
         fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        author_name: 8398a7@action-slack
+        debug: true
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.TASKAPI }}
+
