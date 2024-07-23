@@ -49,14 +49,14 @@ jobs:
       env:
         DB_URL: jdbc:mysql://localhost:3306/taskmanagement
         DB_USERNAME: root
-        DB_PASSWORD: ''  # 空密码
+        DB_PASSWORD: ''  
       run: mvn test
       working-directory: ./taskmanagement
 
     - name: Install Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '14'
+        node-version: '16' 
 
     - name: Install Newman
       run: npm install -g newman
