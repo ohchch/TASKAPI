@@ -15,7 +15,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping --silent"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -25,7 +25,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Clone taskmanagement repository
-      run: git clone https://github.com/ohchch/taskmanagement.git
+      run: git clone https://github.com/ohchch/taskmanagement.git ./taskmanagement
 
     - name: Set up JDK 22
       uses: actions/setup-java@v2
@@ -46,11 +46,13 @@ jobs:
       working-directory: ./taskmanagement
 
     - name: Start Spring Boot application
-      run: mvn spring-boot:start
-      working-directory: ./taskmanagement &
-      
+      run: nohup mvn spring-boot:run &
+      working-directory: ./taskmanagement
+
     - name: Wait for Spring Boot application to start
-      run: sleep 30
+      run: |
+        echo "Waiting for Spring Boot to start..."
+        timeout 120s bash -c 'until echo > /dev/tcp/localhost/8080; do sleep 1; done'
 
     - name: Install Node.js
       uses: actions/setup-node@v1
@@ -61,7 +63,7 @@ jobs:
       run: npm install -g newman
 
     - name: Run API tests
-      run: newman run ./Task\ Management\ API.postman_collection.json
+      run: newman run ./taskmanagement/Task\ Management\ API.postman_collection.json
 
     - name: Send Slack Notification
       if: failure()
