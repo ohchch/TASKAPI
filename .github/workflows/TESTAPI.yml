@@ -72,3 +72,76 @@ jobs:
         fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.TASKAPI }}
+name: TESTAPI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  
+          MYSQL_DATABASE: taskmanagement
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - name: Checkout TASKAPI repository
+      uses: actions/checkout@v2
+
+    - name: Clone taskmanagement repository
+      run: git clone https://github.com/ohchch/taskmanagement.git
+
+    - name: Set up JDK 22
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin'
+        java-version: '22'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/taskmanagement/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Install dependencies
+      run: mvn install -DskipTests
+      working-directory: ./taskmanagement
+
+    - name: Start Spring Boot application
+      run: mvn spring-boot:start
+      working-directory: ./taskmanagement &
+      
+    - name: Wait for Spring Boot application to start
+      run: sleep 30
+
+    - name: Install Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16'  
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run API tests
+      run: newman run ./Task\ Management\ API.postman_collection.json
+
+    - name: Send Slack Notification
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.TASKAPI }}
