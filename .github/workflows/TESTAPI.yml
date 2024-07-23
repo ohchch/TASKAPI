@@ -10,7 +10,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'  # 允许空密码
           MYSQL_DATABASE: taskmanagement
         ports:
           - 3306:3306
@@ -49,7 +49,7 @@ jobs:
       env:
         DB_URL: jdbc:mysql://localhost:3306/taskmanagement
         DB_USERNAME: root
-        DB_PASSWORD: ''
+        DB_PASSWORD: ''  # 空密码
       run: mvn test
       working-directory: ./taskmanagement
 
