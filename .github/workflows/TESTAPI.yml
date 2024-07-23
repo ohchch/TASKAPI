@@ -52,7 +52,7 @@ jobs:
     - name: Wait for Spring Boot application to start
       run: |
         echo "Waiting for Spring Boot to start..."
-        timeout 120s bash -c 'until echo > /dev/ttcp/localhost/8080; do sleep 1; done'
+        timeout 120s bash -c 'until echo > /dev/tcp/localhost/8080; do sleep 1; done'
 
     - name: Install Node.js
       uses: actions/setup-node@v1
