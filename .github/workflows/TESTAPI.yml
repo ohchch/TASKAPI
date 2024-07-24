@@ -26,11 +26,11 @@ jobs:
         name: "Run tests"
         run: "newman run TaskManagementAPI.postman_collection.json -r htmlextra --reporter-htmlextra-export htmlreport.html --reporter-htmlextra-darkTheme  > runreport1.html"
       
-      - name: Upload to Slack
-        uses: adrey/slack-file-upload-action@master
+      - name: Publish report
+        uses: MeilCli/slack-upload-file@v1
         with:
-          token: ${{ secrets.TASKAPI }}
-          path: './TEST/htmlreport.html'
-          channel: schoolwork
-          filename: postmanReport.html
-          filetype: html
+          slack_token: ${{ secrets.TASKAPI }}
+          file_path: './TEST/htmlreport.html'
+          file_name: 'postmanReport.html'
+          file_type: 'html'
+          channels: 'schoolwork'
