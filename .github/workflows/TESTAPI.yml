@@ -66,12 +66,12 @@ jobs:
       run: newman run ./TEST/Task\ Management\ API.postman_collection.json
 
     - name: Send Slack Notification
-        uses: MeilCli/slack-upload-file@v1
-        with:
-          slack_token: ${{ secrets.TASKAPI}}
-          file_path:'./TEST/htmlreport.html'
-          file_name:'postmanReport.html'
-          file_type:'html'
-          chennels:'schoolwork'
+      uses: MeilCli/slack-upload-file@v1
+      with:
+        slack_token: ${{ secrets.TASKAPI}}
+        file_path:'./TEST/htmlreport.html'
+        file_name:'postmanReport.html'
+        file_type:'html'
+        chennels:'schoolwork'
 
 
