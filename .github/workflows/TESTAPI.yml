@@ -33,4 +33,4 @@ jobs:
           file_path: './TEST/htmlreport.html'
           file_name: 'postmanReport.html'
           file_type: 'html'
-          channels: 'schoolwork'
+          channels: 'C07DKNWK50T'
