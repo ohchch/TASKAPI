@@ -69,7 +69,7 @@ jobs:
       uses: MeilCli/slack-upload-file@v1
       with:
         slack_token: ${{ secrets.TASKAPI}}
-        file_path: './TEST/htmlreport.html'
+        file_path: './schoolwork/htmlreport.html'
         file_name: 'postmanReport.html'
         file_type: html'
         chennels: 'schoolwork'
